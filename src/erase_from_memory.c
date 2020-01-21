@@ -1,6 +1,5 @@
 // SOURCE: https://www.cryptologie.net/article/419/zeroing-memory-compiler-optimizations-and-memset_s/
 #include "erase_from_memory.h"
-#define __STDC_WANT_LIB_EXT1__ 1
 #include <stdlib.h>
 #include <string.h>
 
