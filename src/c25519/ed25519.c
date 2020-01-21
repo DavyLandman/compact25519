@@ -6,6 +6,8 @@
 
 #include "ed25519.h"
 
+#ifndef COMPACT_DISABLE_ED25519
+
 /* Base point is (numbers wrapped):
  *
  *     x = 151122213495354007725011514095885315114
@@ -318,3 +320,4 @@ void ed25519_smult(struct ed25519_pt *r_out, const struct ed25519_pt *p,
 
 	ed25519_copy(r_out, &r);
 }
+#endif

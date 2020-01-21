@@ -6,6 +6,7 @@
 
 #include "sha512.h"
 
+#ifndef COMPACT_DISABLE_ED25519
 const struct sha512_state sha512_initial_state = { {
 	0x6a09e667f3bcc908LL, 0xbb67ae8584caa73bLL,
 	0x3c6ef372fe94f82bLL, 0xa54ff53a5f1d36f1LL,
@@ -226,3 +227,4 @@ void sha512_get(const struct sha512_state *s, uint8_t *hash,
 		memcpy(hash, tmp, len);
 	}
 }
+#endif

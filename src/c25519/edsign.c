@@ -5,6 +5,8 @@
  */
 
 #include "ed25519.h"
+
+#ifndef COMPACT_DISABLE_ED25519
 #include "sha512.h"
 #include "fprime.h"
 #include "edsign.h"
@@ -166,3 +168,4 @@ uint8_t edsign_verify(const uint8_t *signature, const uint8_t *pub,
 	/* Equal? */
 	return ok & f25519_eq(lhs, rhs);
 }
+#endif

@@ -7,6 +7,7 @@
 #ifndef SHA512_H_
 #define SHA512_H_
 
+#ifndef COMPACT_DISABLE_ED25519
 #include <stdint.h>
 #include <stddef.h>
 #include <string.h>
@@ -49,4 +50,7 @@ void sha512_final(struct sha512_state *s, const uint8_t *blk,
 void sha512_get(const struct sha512_state *s, uint8_t *hash,
 		unsigned int offset, unsigned int len);
 
+#else
+typedef int disabled_module;
+#endif
 #endif

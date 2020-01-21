@@ -6,6 +6,7 @@
 
 #include "fprime.h"
 
+#ifndef COMPACT_DISABLE_ED25519
 const uint8_t fprime_zero[FPRIME_SIZE] = {0};
 const uint8_t fprime_one[FPRIME_SIZE] = {1};
 
@@ -213,3 +214,4 @@ void fprime_inv(uint8_t *r, const uint8_t *a, const uint8_t *modulus)
 			fprime_copy(r, r2);
 	}
 }
+#endif

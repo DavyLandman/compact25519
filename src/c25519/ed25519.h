@@ -7,6 +7,7 @@
 #ifndef ED25519_H_
 #define ED25519_H_
 
+#ifndef COMPACT_DISABLE_ED25519
 #include "f25519.h"
 
 /* This is not the Ed25519 signature system. Rather, we're implementing
@@ -79,4 +80,8 @@ void ed25519_double(struct ed25519_pt *r, const struct ed25519_pt *a);
 void ed25519_smult(struct ed25519_pt *r, const struct ed25519_pt *a,
 		   const uint8_t *e);
 
+#else
+typedef int disabled_module;
 #endif
+#endif
+

@@ -1,5 +1,9 @@
+#ifndef COMPACT_DISABLE_ED25519
 #include "../src/compact_ed25519.h"
+#endif
+#ifndef COMPACT_DISABLE_X25519
 #include "../src/compact_x25519.h"
+#endif
 #include <stdio.h>
 #include <stdint.h>
 #include <string.h>
@@ -23,6 +27,7 @@ static void fill_random(void* target, size_t length, pcg32_random_t* rng) {
     }
 }
 
+#ifndef COMPACT_DISABLE_X25519
 static void testX25519(pcg32_random_t* rng) {
     printf("Testing X25519: ");
     uint8_t seed1[X25519_KEY_SIZE];
@@ -44,7 +49,9 @@ static void testX25519(pcg32_random_t* rng) {
 
     printf(memcmp(shared1, shared2, X25519_SHARED_SIZE) == 0 ? "Success\n" : "Fail\n");
 }
+#endif
 
+#ifndef COMPACT_DISABLE_ED25519
 #define MSG_TEST_SIZE (ED25519_PRIVATE_KEY_SIZE * 2)
 static void testEd25519(pcg32_random_t* rng) {
     printf("Testing Ed25519: ");
@@ -76,6 +83,7 @@ static void testEd25519(pcg32_random_t* rng) {
         printf("Success\n");
     }
 }
+#endif
 
 int main(void) {
     srand(time(NULL)); 
@@ -83,11 +91,15 @@ int main(void) {
     rng.state = rand();
     rng.inc = rand() | 1;
 
+#ifndef COMPACT_DISABLE_X25519
     for (int i = 0; i < 5; i++) {
         testX25519(&rng);
     }
+#endif
 
+#ifndef COMPACT_DISABLE_ED25519
     for (int i = 0; i < 5; i++) {
         testEd25519(&rng);
     }
+#endif
 }

@@ -7,6 +7,7 @@
 #ifndef FPRIME_H_
 #define FPRIME_H_
 
+#ifndef COMPACT_DISABLE_ED25519
 #include <stdint.h>
 #include <string.h>
 
@@ -66,5 +67,7 @@ void fprime_mul(uint8_t *r, const uint8_t *a, const uint8_t *b,
 
 /* Compute multiplicative inverse. r must be distinct from a */
 void fprime_inv(uint8_t *r, const uint8_t *a, const uint8_t *modulus);
-
+#else
+typedef int disabled_module;
+#endif
 #endif
