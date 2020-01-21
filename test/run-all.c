@@ -5,28 +5,14 @@
 #include <string.h>
 #include <time.h>
 #include <stdlib.h>
+#include "pcg_random.h"
 
-// *Really* minimal PCG32 code / (c) 2014 M.E. O'Neill / pcg-random.org
-// Licensed under Apache License 2.0 (NO WARRANTY, etc. see website)
-
-typedef struct { uint64_t state;  uint64_t inc; } pcg32_random_t;
-
-static uint32_t pcg32_random_r(pcg32_random_t* rng)
-{
-    uint64_t oldstate = rng->state;
-    // Advance internal state
-    rng->state = oldstate * 6364136223846793005ULL + (rng->inc|1);
-    // Calculate output function (XSH RR), uses old state for max ILP
-    uint32_t xorshifted = ((oldstate >> 18u) ^ oldstate) >> 27u;
-    uint32_t rot = oldstate >> 59u;
-    return (xorshifted >> rot) | (xorshifted << ((-rot) & 31));
-}
 
 static void fill_random(void* target, size_t length, pcg32_random_t* rng) {
     if (length >= sizeof(uint32_t)) {
         uint32_t *p = target;
         uint32_t *last = p + (length / sizeof(uint32_t));
-        while (p <= last) {
+        while (p < last) {
             *p++ = pcg32_random_r(rng);
         }
     }
@@ -37,8 +23,8 @@ static void fill_random(void* target, size_t length, pcg32_random_t* rng) {
     }
 }
 
-static void testx25519(pcg32_random_t* rng) {
-    printf("Testing x25519: ");
+static void testX25519(pcg32_random_t* rng) {
+    printf("Testing X25519: ");
     uint8_t seed1[X25519_KEY_SIZE];
     uint8_t seed2[X25519_KEY_SIZE];
     fill_random(seed1, X25519_KEY_SIZE, rng);
@@ -56,11 +42,38 @@ static void testx25519(pcg32_random_t* rng) {
     compact_x25519_shared(shared1, sec1, pub2);
     compact_x25519_shared(shared2, sec2, pub1);
 
-    if (memcmp(shared1, shared2, X25519_SHARED_SIZE) == 0) {
-        printf("Success\n");
+    printf(memcmp(shared1, shared2, X25519_SHARED_SIZE) == 0 ? "Success\n" : "Fail\n");
+}
+
+#define MSG_TEST_SIZE (ED25519_PRIVATE_KEY_SIZE * 2)
+static void testEd25519(pcg32_random_t* rng) {
+    printf("Testing Ed25519: ");
+    uint8_t seed[ED25519_SEED_SIZE];
+    fill_random(seed, ED25519_SEED_SIZE, rng);
+
+    uint8_t sec[ED25519_PRIVATE_KEY_SIZE];
+    compact_ed25519_keygen(sec, seed);
+
+    uint8_t msg[MSG_TEST_SIZE];
+    fill_random(msg, MSG_TEST_SIZE, rng);
+
+    uint8_t sig[ED25519_SIGNATURE_SIZE];
+    compact_ed25519_sign(sig, sec, msg, MSG_TEST_SIZE);
+
+    uint8_t pub[ED25519_PUBLIC_KEY_SIZE];
+    compact_ed25519_calc_public_key(pub, sec);
+
+    if (!compact_ed25519_verify(sig, pub, msg, MSG_TEST_SIZE)) {
+        printf("Failed normal signature\n");
+        return;
+    }
+
+    msg[3] ^= 0x10; // flip a single bit
+    if (compact_ed25519_verify(sig, pub, msg, MSG_TEST_SIZE)) {
+        printf("Failed on changed data\n");
     }
     else {
-        printf("Failed\n");
+        printf("Success\n");
     }
 }
 
@@ -71,7 +84,10 @@ int main(void) {
     rng.inc = rand() | 1;
 
     for (int i = 0; i < 5; i++) {
-        testx25519(&rng);
+        testX25519(&rng);
     }
 
+    for (int i = 0; i < 5; i++) {
+        testEd25519(&rng);
+    }
 }
