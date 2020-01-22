@@ -2,7 +2,7 @@
 
 #ifndef COMPACT_DISABLE_ED25519
 #include "c25519/edsign.h"
-#include "erase_from_memory.h"
+#include "compact_wipe.h"
 #include <string.h>
 
 #define __PUBLIC_KEY_OFFSET (32)
@@ -10,7 +10,7 @@
 void compact_ed25519_keygen(uint8_t private_key[ED25519_PRIVATE_KEY_SIZE], uint8_t random_seed[ED25519_SEED_SIZE]) {
     // private key is seed + public key, like golang and others
     memcpy(private_key, random_seed, ED25519_SEED_SIZE);
-    erase_from_memory(random_seed, ED25519_SEED_SIZE, ED25519_SEED_SIZE);
+    compact_wipe(random_seed, ED25519_SEED_SIZE);
     edsign_sec_to_pub(private_key + __PUBLIC_KEY_OFFSET, private_key);
 }
 

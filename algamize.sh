@@ -1,8 +1,8 @@
 #!/bin/bash
 SRC_DIR="src/"
 
-NESTED_FILES=("c25519/f25519" "c25519/fprime" "c25519/sha512" "erase_from_memory" "c25519/c25519" "c25519/ed25519" "c25519/edsign" )
-COMPACT_FILES=(compact_x25519 compact_ed25519)
+NESTED_FILES=("c25519/f25519" "c25519/fprime" "c25519/sha512" "c25519/c25519" "c25519/ed25519" "c25519/edsign" )
+COMPACT_FILES=(compact_x25519 compact_ed25519 erase_from_memory)
 
 DST_DIR="$1"
 mkdir -p "$DST_DIR"
