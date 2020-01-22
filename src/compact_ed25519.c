@@ -25,6 +25,4 @@ void compact_ed25519_sign(uint8_t signature[ED25519_SIGNATURE_SIZE], const uint8
 bool compact_ed25519_verify(const uint8_t signature[ED25519_SIGNATURE_SIZE], const uint8_t public_key[ED25519_PUBLIC_KEY_SIZE], const void *message, size_t msg_length) {
     return edsign_verify(signature, public_key, message, msg_length) != 0;
 }
-#else
-typedef int disabled_module;
 #endif

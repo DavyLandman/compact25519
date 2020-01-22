@@ -49,7 +49,5 @@ void edsign_sign(uint8_t *signature, const uint8_t *pub,
 uint8_t edsign_verify(const uint8_t *signature, const uint8_t *pub,
 		      const uint8_t *message, size_t len);
 
-#else
-typedef int disabled_module;
 #endif
 #endif

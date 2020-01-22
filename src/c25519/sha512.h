@@ -50,7 +50,5 @@ void sha512_final(struct sha512_state *s, const uint8_t *blk,
 void sha512_get(const struct sha512_state *s, uint8_t *hash,
 		unsigned int offset, unsigned int len);
 
-#else
-typedef int disabled_module;
 #endif
 #endif

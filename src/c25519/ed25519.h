@@ -80,8 +80,5 @@ void ed25519_double(struct ed25519_pt *r, const struct ed25519_pt *a);
 void ed25519_smult(struct ed25519_pt *r, const struct ed25519_pt *a,
 		   const uint8_t *e);
 
-#else
-typedef int disabled_module;
 #endif
 #endif
-
