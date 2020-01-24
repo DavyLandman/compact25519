@@ -23,12 +23,16 @@
  */
 #define FPRIME_SIZE  32
 
+#ifdef FULL_C25519_CODE
 /* Useful constants */
 extern const uint8_t fprime_zero[FPRIME_SIZE];
 extern const uint8_t fprime_one[FPRIME_SIZE];
+#endif
 
+#ifdef FULL_C25519_CODE
 /* Load a small constant */
 void fprime_load(uint8_t *x, uint32_t c);
+#endif
 
 /* Load a large constant */
 void fprime_from_bytes(uint8_t *x,
@@ -41,6 +45,7 @@ static inline void fprime_copy(uint8_t *x, const uint8_t *a)
 	memcpy(x, a, FPRIME_SIZE);
 }
 
+#ifdef FULL_C25519_CODE
 /* Normalize a field element */
 void fprime_normalize(uint8_t *x, const uint8_t *modulus);
 
@@ -49,6 +54,7 @@ void fprime_normalize(uint8_t *x, const uint8_t *modulus);
  */
 uint8_t fprime_eq(const uint8_t *x, const uint8_t *y);
 
+#endif
 /* Conditional copy. If condition == 0, then zero is copied to dst. If
  * condition == 1, then one is copied to dst. Any other value results in
  * undefined behaviour.
@@ -59,13 +65,17 @@ void fprime_select(uint8_t *dst,
 
 /* Add one value to another. The two pointers must be distinct. */
 void fprime_add(uint8_t *r, const uint8_t *a, const uint8_t *modulus);
+#ifdef FULL_C25519_CODE
 void fprime_sub(uint8_t *r, const uint8_t *a, const uint8_t *modulus);
+#endif
 
 /* Multiply two values to get a third. r must be distinct from a and b */
 void fprime_mul(uint8_t *r, const uint8_t *a, const uint8_t *b,
 		const uint8_t *modulus);
 
+#ifdef FULL_C25519_CODE
 /* Compute multiplicative inverse. r must be distinct from a */
 void fprime_inv(uint8_t *r, const uint8_t *a, const uint8_t *modulus);
+#endif
 #endif
 #endif

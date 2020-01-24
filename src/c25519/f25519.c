@@ -6,7 +6,9 @@
 
 #include "f25519.h"
 
+#ifdef FULL_C25519_CODE
 const uint8_t f25519_zero[F25519_SIZE] = {0};
+#endif
 const uint8_t f25519_one[F25519_SIZE] = {1};
 
 void f25519_load(uint8_t *x, uint32_t c)
@@ -183,6 +185,7 @@ void f25519_mul__distinct(uint8_t *r, const uint8_t *a, const uint8_t *b)
 	}
 }
 
+#ifdef FULL_C25519_CODE
 void f25519_mul(uint8_t *r, const uint8_t *a, const uint8_t *b)
 {
 	uint8_t tmp[F25519_SIZE];
@@ -190,6 +193,7 @@ void f25519_mul(uint8_t *r, const uint8_t *a, const uint8_t *b)
 	f25519_mul__distinct(tmp, a, b);
 	f25519_copy(r, tmp);
 }
+#endif
 
 void f25519_mul_c(uint8_t *r, const uint8_t *a, uint32_t b)
 {
@@ -263,6 +267,7 @@ void f25519_inv__distinct(uint8_t *r, const uint8_t *x)
 	f25519_mul__distinct(r, s, x);
 }
 
+#ifdef FULL_C25519_CODE
 void f25519_inv(uint8_t *r, const uint8_t *x)
 {
 	uint8_t tmp[F25519_SIZE];
@@ -270,6 +275,7 @@ void f25519_inv(uint8_t *r, const uint8_t *x)
 	f25519_inv__distinct(tmp, x);
 	f25519_copy(r, tmp);
 }
+#endif
 
 /* Raise x to the power of (p-5)/8 = 2^252-3, using s for temporary
  * storage.

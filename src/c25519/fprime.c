@@ -7,8 +7,10 @@
 #include "fprime.h"
 
 #ifndef COMPACT_DISABLE_ED25519
+#ifdef FULL_C25519_CODE
 const uint8_t fprime_zero[FPRIME_SIZE] = {0};
 const uint8_t fprime_one[FPRIME_SIZE] = {1};
+#endif
 
 static void raw_add(uint8_t *x, const uint8_t *p)
 {
@@ -71,6 +73,7 @@ static void shift_n_bits(uint8_t *x, int n)
 	}
 }
 
+#ifdef FULL_C25519_CODE
 void fprime_load(uint8_t *x, uint32_t c)
 {
 	unsigned int i;
@@ -83,6 +86,7 @@ void fprime_load(uint8_t *x, uint32_t c)
 	for (; i < FPRIME_SIZE; i++)
 		x[i] = 0;
 }
+#endif
 
 static inline int min_int(int a, int b)
 {
@@ -118,6 +122,7 @@ void fprime_from_bytes(uint8_t *n,
 	}
 }
 
+#ifdef FULL_C25519_CODE
 void fprime_normalize(uint8_t *x, const uint8_t *modulus)
 {
 	uint8_t n[FPRIME_SIZE];
@@ -140,7 +145,7 @@ uint8_t fprime_eq(const uint8_t *x, const uint8_t *y)
 
 	return (sum ^ 1) & 1;
 }
-
+#endif
 void fprime_select(uint8_t *dst,
 		   const uint8_t *zero, const uint8_t *one,
 		   uint8_t condition)
@@ -158,12 +163,14 @@ void fprime_add(uint8_t *r, const uint8_t *a, const uint8_t *modulus)
 	raw_try_sub(r, modulus);
 }
 
+#ifdef FULL_C25519_CODE
 void fprime_sub(uint8_t *r, const uint8_t *a, const uint8_t *modulus)
 {
 	raw_add(r, modulus);
 	raw_try_sub(r, a);
 	raw_try_sub(r, modulus);
 }
+#endif
 
 void fprime_mul(uint8_t *r, const uint8_t *a, const uint8_t *b,
 		const uint8_t *modulus)
@@ -186,6 +193,7 @@ void fprime_mul(uint8_t *r, const uint8_t *a, const uint8_t *b,
 	}
 }
 
+#ifdef FULL_C25519_CODE
 void fprime_inv(uint8_t *r, const uint8_t *a, const uint8_t *modulus)
 {
 	uint8_t pm2[FPRIME_SIZE];
@@ -214,4 +222,5 @@ void fprime_inv(uint8_t *r, const uint8_t *a, const uint8_t *modulus)
 			fprime_copy(r, r2);
 	}
 }
+#endif
 #endif

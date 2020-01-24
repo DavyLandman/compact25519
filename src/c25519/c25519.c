@@ -6,6 +6,7 @@
 
 #include "c25519.h"
 
+#ifndef COMPACT_DISABLE_X25519
 const uint8_t c25519_base_x[F25519_SIZE] = {9};
 
 /* Double an X-coordinate */
@@ -122,3 +123,4 @@ void c25519_smult(uint8_t *result, const uint8_t *q, const uint8_t *e)
 	f25519_mul__distinct(result, zm1, xm);
 	f25519_normalize(result);
 }
+#endif

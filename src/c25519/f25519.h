@@ -24,7 +24,9 @@
 #define F25519_SIZE  32
 
 /* Identity constants */
+#ifdef FULL_C25519_CODE
 extern const uint8_t f25519_zero[F25519_SIZE];
+#endif
 extern const uint8_t f25519_one[F25519_SIZE];
 
 /* Load a small constant */
@@ -64,7 +66,9 @@ void f25519_neg(uint8_t *r, const uint8_t *a);
 /* Multiply two field points. The __distinct variant is used when r is
  * known to be in a different location to a and b.
  */
+#ifdef FULL_C25519_CODE
 void f25519_mul(uint8_t *r, const uint8_t *a, const uint8_t *b);
+#endif
 void f25519_mul__distinct(uint8_t *r, const uint8_t *a, const uint8_t *b);
 
 /* Multiply a point by a small constant. The two pointers are not
@@ -77,7 +81,9 @@ void f25519_mul_c(uint8_t *r, const uint8_t *a, uint32_t b);
 /* Take the reciprocal of a field point. The __distinct variant is used
  * when r is known to be in a different location to x.
  */
+#ifdef FULL_C25519_CODE
 void f25519_inv(uint8_t *r, const uint8_t *x);
+#endif
 void f25519_inv__distinct(uint8_t *r, const uint8_t *x);
 
 /* Compute one of the square roots of the field element, if the element
