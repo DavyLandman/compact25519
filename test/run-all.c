@@ -12,7 +12,7 @@
 #include "pcg_random.h"
 
 
-static void fill_random(void* target, size_t length, pcg32_random_t* rng) {
+static void fill_crappy_random(void* target, size_t length, pcg32_random_t* rng) {
     if (length >= sizeof(uint32_t)) {
         uint32_t *p = target;
         uint32_t *last = p + (length / sizeof(uint32_t));
@@ -32,8 +32,8 @@ static void testX25519(pcg32_random_t* rng) {
     printf("Testing X25519: ");
     uint8_t seed1[X25519_KEY_SIZE];
     uint8_t seed2[X25519_KEY_SIZE];
-    fill_random(seed1, X25519_KEY_SIZE, rng);
-    fill_random(seed2, X25519_KEY_SIZE, rng);
+    fill_crappy_random(seed1, X25519_KEY_SIZE, rng);
+    fill_crappy_random(seed2, X25519_KEY_SIZE, rng);
 
     uint8_t sec1[X25519_KEY_SIZE];
     uint8_t pub1[X25519_KEY_SIZE];
@@ -61,13 +61,13 @@ static void testX25519(pcg32_random_t* rng) {
 static void testEd25519(pcg32_random_t* rng) {
     printf("Testing Ed25519: ");
     uint8_t seed[ED25519_SEED_SIZE];
-    fill_random(seed, ED25519_SEED_SIZE, rng);
+    fill_crappy_random(seed, ED25519_SEED_SIZE, rng);
 
     uint8_t sec[ED25519_PRIVATE_KEY_SIZE];
     compact_ed25519_keygen(sec, seed);
 
     uint8_t msg[MSG_TEST_SIZE];
-    fill_random(msg, MSG_TEST_SIZE, rng);
+    fill_crappy_random(msg, MSG_TEST_SIZE, rng);
 
     uint8_t sig[ED25519_SIGNATURE_SIZE];
     compact_ed25519_sign(sig, sec, msg, MSG_TEST_SIZE);

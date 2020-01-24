@@ -1,6 +1,11 @@
 #ifndef PCG_RANDOM_H
 #define PCG_RANDOM_H
 
+// WARNING: this is a BAD source for random data for this library
+// it is only used as an easy way to make the tests more cross platform.
+// Good randomness is platform specific, PLEASE USE THAT SOURCE, NOT THIS
+
+
 // *Really* minimal PCG32 code / (c) 2014 M.E. O'Neill / pcg-random.org
 // Licensed under Apache License 2.0 (NO WARRANTY, etc. see website)
 
