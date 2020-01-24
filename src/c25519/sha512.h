@@ -7,7 +7,7 @@
 #ifndef SHA512_H_
 #define SHA512_H_
 
-#ifndef COMPACT_DISABLE_ED25519
+#if !defined(COMPACT_DISABLE_ED25519) || !defined(COMPACT_DISABLE_X25519_DERIVE)
 #include <stdint.h>
 #include <stddef.h>
 #include <string.h>

@@ -47,6 +47,11 @@ static void testX25519(pcg32_random_t* rng) {
     compact_x25519_shared(shared1, sec1, pub2);
     compact_x25519_shared(shared2, sec2, pub1);
 
+#ifndef COMPACT_DISABLE_X25519_DERIVE
+    uint8_t derived[64];
+    compact_x25519_derive_encryption_key(derived, sizeof(derived), shared1, pub1, pub2);
+#endif
+
     printf(memcmp(shared1, shared2, X25519_SHARED_SIZE) == 0 ? "Success\n" : "Fail\n");
 }
 #endif
