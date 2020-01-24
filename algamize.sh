@@ -1,12 +1,16 @@
 #!/bin/bash
+set -e -o nounset
+
+DST_DIR="$1"
+VERSION="$2"
+
+mkdir -p "$DST_DIR"
+
 SRC_DIR="src/"
 
 NESTED_FILES=("c25519/f25519" "c25519/fprime" "c25519/sha512" "c25519/c25519" "c25519/ed25519" "c25519/edsign" )
 COMPACT_FILES=(compact_x25519 compact_ed25519 compact_wipe)
 
-DST_DIR="$1"
-mkdir -p "$DST_DIR"
-VERSION="$2"
 
 DST_HEADER="$DST_DIR/compact25519.h"
 DST_SOURCE="$DST_DIR/compact25519.c"
@@ -39,7 +43,11 @@ function merge_includes() {
             print other[i];
         }
     }
-    ' | cat -s # remove double blank lines
+    '
+}
+
+function remove_double_blank_lines() {
+    cat -s
 }
 
 echo "// compact25519 $VERSION
@@ -51,7 +59,7 @@ echo "// compact25519 $VERSION
 
 for h in "${COMPACT_FILES[@]}"; do 
     cat "$SRC_DIR/$h.h" | remove_header_guard 
-done | merge_includes >> "$DST_HEADER" 
+done | merge_includes | remove_double_blank_lines >> "$DST_HEADER" 
 
 echo "#endif" >> "$DST_HEADER"
 
@@ -64,16 +72,19 @@ echo "// compact25519 $VERSION
 
 for h in "${NESTED_FILES[@]}"; do 
     echo "// ******* BEGIN: $h.h ********" >> "$DST_SOURCE"
-    cat "$SRC_DIR/$h.h" | remove_header_guard | remove_local_imports >> "$DST_SOURCE"
+    cat "$SRC_DIR/$h.h" | remove_header_guard | remove_local_imports | remove_double_blank_lines>> "$DST_SOURCE"
     echo "// ******* END:   $h.h ********" >> "$DST_SOURCE"
 done
 
 for h in "${NESTED_FILES[@]}"; do 
     echo "// ******* BEGIN: $h.c ********" >> "$DST_SOURCE"
-    cat "$SRC_DIR/$h.c" | remove_local_imports >> "$DST_SOURCE"
+    cat "$SRC_DIR/$h.c" | remove_local_imports | remove_double_blank_lines >> "$DST_SOURCE"
     echo "// ******* END:   $h.c ********" >> "$DST_SOURCE"
 done
 
+
 for h in "${COMPACT_FILES[@]}"; do 
-    cat "$SRC_DIR/$h.c" | remove_local_imports >> "$DST_SOURCE"
+    echo "// ******* BEGIN: $h.c ********" >> "$DST_SOURCE"
+    cat "$SRC_DIR/$h.c" | remove_local_imports | remove_double_blank_lines >> "$DST_SOURCE"
+    echo "// ******* END: $h.c ********" >> "$DST_SOURCE"
 done
