@@ -9,7 +9,7 @@ mkdir -p "$DST_DIR"
 SRC_DIR="src/"
 
 NESTED_FILES=("c25519/f25519" "c25519/fprime" "c25519/sha512" "c25519/c25519" "c25519/ed25519" "c25519/edsign" )
-COMPACT_FILES=(compact_x25519 compact_ed25519 compact_wipe)
+COMPACT_FILES=(compact_wipe compact_x25519 compact_ed25519)
 
 
 DST_HEADER="$DST_DIR/compact25519.h"
@@ -86,5 +86,5 @@ done
 for h in "${COMPACT_FILES[@]}"; do 
     echo "// ******* BEGIN: $h.c ********" >> "$DST_SOURCE"
     cat "$SRC_DIR/$h.c" | remove_local_imports | remove_double_blank_lines >> "$DST_SOURCE"
-    echo "// ******* END: $h.c ********" >> "$DST_SOURCE"
+    echo "// ******* END:   $h.c ********" >> "$DST_SOURCE"
 done
