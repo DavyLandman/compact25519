@@ -5,11 +5,12 @@ package main
 import "C"
 
 import (
+	"unsafe"
 	"fmt"
 	"log"
 	"crypto/rand"
 	"bytes"
-	//"crypto/ed25519"
+	"crypto/ed25519"
 	"golang.org/x/crypto/curve25519"
 )
 
@@ -18,7 +19,7 @@ func bytePointer(ar []byte) *C.uint8_t {
 }
 
 func x25519FullCompact() {
-	fmt.Print("testing compact_X25519: ")
+	fmt.Print("testing X25519 compact: ")
 	var seed1, seed2 [C.X25519_KEY_SIZE]byte
 	rand.Read(seed1[:])
 	rand.Read(seed2[:])
@@ -56,7 +57,7 @@ func x25519CalcPublic(privateKey []byte) []byte {
 	return result
 }
 
-func x25519Interopt() {
+func x25519Interop() {
 	fmt.Print("testing X25519 interop: ")
 	var seed1 [C.X25519_KEY_SIZE]byte
 	rand.Read(seed1[:])
@@ -79,7 +80,81 @@ func x25519Interopt() {
 	}
 }
 
+func ed25519Compact() {
+	fmt.Print("Testing ed25519 compact: ");
+	var seed [C.ED25519_SEED_SIZE]byte
+	rand.Read(seed[:])
+
+	var sec [C.ED25519_PRIVATE_KEY_SIZE]byte
+	var pub [C.ED25519_PUBLIC_KEY_SIZE]byte
+
+    C.compact_ed25519_keygen(bytePointer(sec[:]), bytePointer(pub[:]), bytePointer(seed[:]));
+
+	var msg [200]byte
+	rand.Read(msg[:])
+
+	var sig [C.ED25519_SIGNATURE_SIZE]byte
+    C.compact_ed25519_sign(bytePointer(sig[:]), bytePointer(sec[:]), unsafe.Pointer(&msg[0]), C.size_t(len(msg)));
+
+    if !C.compact_ed25519_verify(bytePointer(sig[:]), bytePointer(pub[:]), unsafe.Pointer(&msg[0]), C.size_t(len(msg))) {
+        fmt.Print("** Failed normal signature\n");
+        return;
+    }
+
+    msg[3] ^= 0x10; // flip a single bit
+    if C.compact_ed25519_verify(bytePointer(sig[:]), bytePointer(pub[:]), unsafe.Pointer(&msg[0]), C.size_t(len(msg))) {
+        fmt.Print("** Failed changed data\n");
+    } else {
+		fmt.Println("OK");
+    }
+}
+
+func ed25519Interop() {
+
+	fmt.Print("Testing ed25519 interop: ");
+	var seed [C.ED25519_SEED_SIZE]byte
+	rand.Read(seed[:])
+
+	var sec [C.ED25519_PRIVATE_KEY_SIZE]byte
+	var pub [C.ED25519_PUBLIC_KEY_SIZE]byte
+
+    C.compact_ed25519_keygen(bytePointer(sec[:]), bytePointer(pub[:]), bytePointer(seed[:]));
+
+	var msg [200]byte
+	rand.Read(msg[:])
+
+	var sig [C.ED25519_SIGNATURE_SIZE]byte
+	C.compact_ed25519_sign(bytePointer(sig[:]), bytePointer(sec[:]), unsafe.Pointer(&msg[0]), C.size_t(len(msg)));
+
+	if !ed25519.Verify(ed25519.PublicKey(pub[:]), msg[:], sig[:]) {
+		fmt.Println("** Failure golang verify")
+		return
+	}
+
+	goPublic, goPrivate, err := ed25519.GenerateKey(nil)
+	if err != nil {
+		log.Fatalf("Failure to generate key, %v", err)
+	}
+	goSignature := ed25519.Sign(goPrivate, msg[:])
+
+
+    if !C.compact_ed25519_verify(bytePointer(goSignature), bytePointer(goPublic), unsafe.Pointer(&msg[0]), C.size_t(len(msg))) {
+		fmt.Println("** Failure to verify signature from golang")
+	}
+
+
+	var sig2 [C.ED25519_SIGNATURE_SIZE]byte
+	C.compact_ed25519_sign(bytePointer(sig2[:]), bytePointer(goPrivate), unsafe.Pointer(&msg[0]), C.size_t(len(msg)))
+	if bytes.Equal(goSignature, sig2[:]) {
+		fmt.Println("OK");
+	} else {
+		fmt.Println("** Failure to use go generated keypair")
+	}
+}
+
 func main() {
 	x25519FullCompact()
-	x25519Interopt()
+	x25519Interop()
+	ed25519Compact()
+	ed25519Interop()
 }
