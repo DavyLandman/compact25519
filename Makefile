@@ -1,17 +1,24 @@
-src = $(wildcard src/*.c) \
-	$(wildcard src/c25519/*.c)
+src = $(wildcard src/*.c) $(wildcard src/c25519/*.c)
+.PHONY: clean test dist
 
 CFLAGS+=-std=gnu99 -pedantic -Wall -Wextra -Os -Isrc -Isrc/c25519
 LDFLAGS = 
 
-test: bin/run-tests
+VERSION?=dev-version
+
+test: bin/run-tests 
 	./bin/run-tests
+
+test-dist: test/algamize-test.go dist
+	cd test && go run algamize-test.go
 
 bin/run-tests:  $(src) test/run-all.c
 	mkdir -p bin/
 	$(CC) -o $@ $^ $(LDFLAGS) $(CFLAGS)
 
-.PHONY: clean test
+dist:
+	bash algamize.sh dist/ "${VERSION}"
+
 clean:
 	rm -f bin/*
 

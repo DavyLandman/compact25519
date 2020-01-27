@@ -55,7 +55,8 @@ function make_everything_static() {
         -e 's/^\([^\ \t#{}()\/]\)/static \1/' \
         -e 's/static static/static/' \
         -e 's/static struct/struct/' \
-        -e 's/static extern/extern/'
+        -e 's/static extern/extern/' \
+        -e 's/static const/const/'
 }
 
 function add_decl_spec() {

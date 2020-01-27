@@ -64,16 +64,14 @@ static void testEd25519(pcg32_random_t* rng) {
     fill_crappy_random(seed, ED25519_SEED_SIZE, rng);
 
     uint8_t sec[ED25519_PRIVATE_KEY_SIZE];
-    compact_ed25519_keygen(sec, seed);
+    uint8_t pub[ED25519_PUBLIC_KEY_SIZE];
+    compact_ed25519_keygen(sec, pub, seed);
 
     uint8_t msg[MSG_TEST_SIZE];
     fill_crappy_random(msg, MSG_TEST_SIZE, rng);
 
     uint8_t sig[ED25519_SIGNATURE_SIZE];
     compact_ed25519_sign(sig, sec, msg, MSG_TEST_SIZE);
-
-    uint8_t pub[ED25519_PUBLIC_KEY_SIZE];
-    compact_ed25519_calc_public_key(pub, sec);
 
     if (!compact_ed25519_verify(sig, pub, msg, MSG_TEST_SIZE)) {
         printf("Failed normal signature\n");

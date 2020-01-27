@@ -13,7 +13,7 @@ void compact_ed25519_keygen(
     uint8_t random_seed[ED25519_SEED_SIZE]
 ) {
     // private key is seed + public key, like golang and others
-    edsign_sec_to_pub(public_key, private_key);
+    edsign_sec_to_pub(public_key, random_seed);
     memcpy(private_key, random_seed, ED25519_SEED_SIZE);
     memcpy(private_key + __PUBLIC_KEY_OFFSET, public_key, ED25519_PUBLIC_KEY_SIZE);
     compact_wipe(random_seed, ED25519_SEED_SIZE);
