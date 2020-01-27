@@ -50,16 +50,35 @@ function remove_double_blank_lines() {
     cat -s
 }
 
+function make_everything_static() {
+    sed \
+        -e 's/^\([^\ \t#{}()\/]\)/static \1/' \
+        -e 's/static static/static/' \
+        -e 's/static struct/struct/' \
+        -e 's/static extern/extern/'
+}
+
+function add_decl_spec() {
+    sed \
+        -e 's/^static /static COMPACT_25519_DECL /' \
+        -e 's/^\([^\ \t#{}()\/*s]\)/COMPACT_25519_DECL \1/' # non static stuff like global header
+}
+
 echo "// compact25519 $VERSION
 // Licensed under CC0-1.0
 // Based on Daniel Beer's Public Domain C25519 implementation
 #ifndef __COMPACT_25519_H
 #define __COMPACT_25519_H
+
+// provide your own decl specificier like "-DCOMPACT_25519_DECL=ICACHE_RAM_ATTR"
+#ifndef COMPACT_25519_DECL
+#define COMPACT_25519_DECL
+#endif
 " > "$DST_HEADER"
 
 for h in "${COMPACT_FILES[@]}"; do 
     cat "$SRC_DIR/$h.h" | remove_header_guard 
-done | merge_includes | remove_double_blank_lines >> "$DST_HEADER" 
+done | merge_includes | remove_double_blank_lines | add_decl_spec >> "$DST_HEADER" 
 
 echo "#endif" >> "$DST_HEADER"
 
@@ -71,20 +90,24 @@ echo "// compact25519 $VERSION
 " > "$DST_SOURCE"
 
 for h in "${NESTED_FILES[@]}"; do 
-    echo "// ******* BEGIN: $h.h ********" >> "$DST_SOURCE"
-    cat "$SRC_DIR/$h.h" | remove_header_guard | remove_local_imports | remove_double_blank_lines>> "$DST_SOURCE"
-    echo "// ******* END:   $h.h ********" >> "$DST_SOURCE"
-done
+    echo "// ******* BEGIN: $h.h ********"
+    cat "$SRC_DIR/$h.h" | remove_header_guard | \
+        remove_local_imports | remove_double_blank_lines | \
+        make_everything_static | add_decl_spec
+    echo "// ******* END:   $h.h ********"
+done >> "$DST_SOURCE"
 
 for h in "${NESTED_FILES[@]}"; do 
-    echo "// ******* BEGIN: $h.c ********" >> "$DST_SOURCE"
-    cat "$SRC_DIR/$h.c" | remove_local_imports | remove_double_blank_lines >> "$DST_SOURCE"
-    echo "// ******* END:   $h.c ********" >> "$DST_SOURCE"
-done
+    echo "// ******* BEGIN: $h.c ********"
+    cat "$SRC_DIR/$h.c" | remove_local_imports | \
+    remove_double_blank_lines | make_everything_static | add_decl_spec
+    echo "// ******* END:   $h.c ********"
+done >> "$DST_SOURCE"
 
 
 for h in "${COMPACT_FILES[@]}"; do 
-    echo "// ******* BEGIN: $h.c ********" >> "$DST_SOURCE"
-    cat "$SRC_DIR/$h.c" | remove_local_imports | remove_double_blank_lines >> "$DST_SOURCE"
-    echo "// ******* END:   $h.c ********" >> "$DST_SOURCE"
-done
+    echo "// ******* BEGIN: $h.c ********"
+    cat "$SRC_DIR/$h.c" | remove_local_imports | \
+    remove_double_blank_lines | add_decl_spec
+    echo "// ******* END:   $h.c ********"
+done >> "$DST_SOURCE"
