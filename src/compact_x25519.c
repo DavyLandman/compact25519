@@ -5,15 +5,23 @@
 #include "c25519/sha512.h"
 #include "compact_wipe.h"
 
-void compact_x25519_keygen(uint8_t private_key[X25519_KEY_SIZE], uint8_t public_key[X25519_KEY_SIZE], uint8_t random_seed[X25519_KEY_SIZE]) {
+void compact_x25519_keygen(
+    uint8_t private_key[X25519_KEY_SIZE], 
+    uint8_t public_key[X25519_KEY_SIZE],
+    uint8_t random_seed[X25519_KEY_SIZE]
+) {
     memcpy(private_key, random_seed, X25519_KEY_SIZE);
     compact_wipe(random_seed, X25519_KEY_SIZE);
     c25519_prepare(private_key);
     c25519_smult(public_key, c25519_base_x, private_key);
 }
 
-void compact_x25519_shared(uint8_t shared_key[X25519_SHARED_SIZE], const uint8_t my_private_key[X25519_KEY_SIZE], const uint8_t their_public_key[X25519_KEY_SIZE]) {
-    c25519_smult(shared_key, their_public_key, my_private_key);
+void compact_x25519_shared(
+    uint8_t shared_secret[X25519_SHARED_SIZE], 
+    const uint8_t my_private_key[X25519_KEY_SIZE], 
+    const uint8_t their_public_key[X25519_KEY_SIZE]
+) {
+    c25519_smult(shared_secret, their_public_key, my_private_key);
 }
 
 #ifndef COMPACT_DISABLE_X25519_DERIVE
@@ -26,13 +34,19 @@ static uint8_t* append(uint8_t *dst, const void * source, size_t length) {
     return dst + length;
 }
 
-void compact_x25519_derive_encryption_key(uint8_t *encryption_key, size_t key_size, const uint8_t shared_key[X25519_SHARED_SIZE], const uint8_t public_key1[X25519_KEY_SIZE], const uint8_t public_key2[X25519_KEY_SIZE]) {
+void compact_x25519_derive_encryption_key(
+    uint8_t *encryption_key, 
+    size_t key_size, 
+    const uint8_t shared_secret[X25519_SHARED_SIZE], 
+    const uint8_t public_key1[X25519_KEY_SIZE], 
+    const uint8_t public_key2[X25519_KEY_SIZE]
+) {
     if (key_size > SHA512_HASH_SIZE) {
         key_size = SHA512_HASH_SIZE;
     }
     uint8_t key_data[X25519_SHARED_SIZE + 2 * X25519_KEY_SIZE];
     uint8_t *p = key_data;
-    p = append(p, shared_key, X25519_SHARED_SIZE);
+    p = append(p, shared_secret, X25519_SHARED_SIZE);
     p = append(p, public_key1, X25519_KEY_SIZE);
     p = append(p, public_key2, X25519_KEY_SIZE);
 
