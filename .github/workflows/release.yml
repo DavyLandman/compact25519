@@ -15,9 +15,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@master
 
+      - name: Get the version
+        id: get_version
+        run: echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/}
+
       - name: build & package release
-        env:
-          VERSION: ${{ github.ref }}
         run: make package-dist 
 
       - name: Create Release
@@ -44,5 +46,5 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }} 
           asset_path: ./dist.zip
-          asset_name: compact25519-${{ github.ref }}.zip
+          asset_name: compact25519-${VERSION}.zip
           asset_content_type: application/zip
