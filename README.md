@@ -22,11 +22,21 @@ a single pair of c & h file. Deployment options:
         and copy into your project directory
     - Use PlatformIO and take a dependency on Compact25519
 
+## License and origins
 The implementation of the X25519 and Ed25519 is extracted from 
-[Daniel Beer's C25519](https://www.dlbeer.co.nz/oss/c25519.html).
+[Daniel Beer's c25519](https://www.dlbeer.co.nz/oss/c25519.html) version 2017-10-05.
+
 
 ## Smaller binaries
 
 By default the library contains both X25519 and Ed25519. They share quite some 
 code. Compact25519 has several defines so that you can disable either one of the
 operations to reduce binary size.
+
+| Define Flag | Description |
+|----|----|
+| `COMPACT_DISABLE_ED25519` | Disable Ed25519 feature and the related code, shaves of 32% |
+| `COMPACT_DISABLE_X25519` | Disable X25519 feature and the related code, shaves of 25% |
+| `COMPACT_DISABLE_X25519_DERIVE` | Disable custom derive secret feature, 
+    extra useful combined with `COMPACT_DISABLE_ED25519`, in itself only saves 3%, 
+    combined with disabling Ed25519: 45%|

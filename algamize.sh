@@ -66,8 +66,11 @@ function add_decl_spec() {
 }
 
 echo "// compact25519 $VERSION
+// Source: https://github.com/DavyLandman/compact25519
 // Licensed under CC0-1.0
-// Based on Daniel Beer's Public Domain C25519 implementation
+// Based on Daniel Beer's Public Domain c25519 implementation
+// https://www.dlbeer.co.nz/oss/c25519.html version: 2017-10-05
+
 #ifndef __COMPACT_25519_H
 #define __COMPACT_25519_H
 #if defined(__cplusplus)
@@ -91,8 +94,11 @@ echo "#if defined(__cplusplus)
 
 
 echo "// compact25519 $VERSION
+// Source: https://github.com/DavyLandman/compact25519
 // Licensed under CC0-1.0
-// Based on Daniel Beer's Public Domain C25519 implementation
+// Based on Daniel Beer's Public Domain c25519 implementation
+// https://www.dlbeer.co.nz/oss/c25519.html version: 2017-10-05
+
 #include \"compact25519.h\"
 " > "$DST_SOURCE"
 
