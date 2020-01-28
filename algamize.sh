@@ -70,6 +70,9 @@ echo "// compact25519 $VERSION
 // Based on Daniel Beer's Public Domain C25519 implementation
 #ifndef __COMPACT_25519_H
 #define __COMPACT_25519_H
+#if defined(__cplusplus)
+extern "C" {
+#endif
 
 // provide your own decl specificier like "-DCOMPACT_25519_DECL=ICACHE_RAM_ATTR"
 #ifndef COMPACT_25519_DECL
@@ -81,7 +84,10 @@ for h in "${COMPACT_FILES[@]}"; do
     cat "$SRC_DIR/$h.h" | remove_header_guard 
 done | merge_includes | remove_double_blank_lines | add_decl_spec >> "$DST_HEADER" 
 
-echo "#endif" >> "$DST_HEADER"
+echo "#if defined(__cplusplus)
+}
+#endif
+#endif" >> "$DST_HEADER"
 
 
 echo "// compact25519 $VERSION
