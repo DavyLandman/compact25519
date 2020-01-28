@@ -18,7 +18,7 @@ jobs:
       - name: build & package release
         env:
           VERSION: ${{ github.ref }}
-        steps: make package-dist 
+        run: make package-dist 
 
       - name: Create Release
         id: create_release
