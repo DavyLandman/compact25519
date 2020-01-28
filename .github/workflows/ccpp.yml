@@ -1,4 +1,4 @@
-name: C/C++ CI
+name: Test C code
 
 on: [push]
 
@@ -9,9 +9,27 @@ jobs:
     
     steps:
     - uses: actions/checkout@v2
-    - name: make
+
+    - name: compile
       run: make
-    - name: make test
+    - name: test everything
       run: make test
-    - name: make test-dist
+
+    - name: test disable Ed25519
+      env:
+        CFLAGS: "-DCOMPACT_DISABLE_ED25519"
+      run: make clean test 
+
+    - name: test disable X25519
+      env:
+        CFLAGS: "-DCOMPACT_DISABLE_X25519"
+      run: make clean test 
+
+    - name: Set up Go 1.13
+      uses: actions/setup-go@v1
+      with:
+        go-version: 1.13
+      id: go
+
+    - name: integration test
       run: make test-dist
