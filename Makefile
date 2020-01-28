@@ -21,6 +21,7 @@ test-dist: test/algamize-test.go dist
 dist:
 	bash algamize.sh dist/ "${VERSION}"
 	cp README.md dist/
+	cp LICENSE dist/
 
 PACKAGE_DIST="compact25519-${VERSION}"
 
