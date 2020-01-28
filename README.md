@@ -25,7 +25,8 @@ a single pair of c & h file. Deployment options:
 ## License and origins
 The implementation of the X25519 and Ed25519 is extracted from 
 [Daniel Beer's c25519](https://www.dlbeer.co.nz/oss/c25519.html) version 2017-10-05.
-
+Daniel Beer released it under the Public Domain license. To remain in the same
+spirit, this library is also licensed as Public Domain using the CC0 license.
 
 ## Smaller binaries
 
@@ -37,6 +38,4 @@ operations to reduce binary size.
 |----|----|
 | `COMPACT_DISABLE_ED25519` | Disable Ed25519 feature and the related code, shaves of 32% |
 | `COMPACT_DISABLE_X25519` | Disable X25519 feature and the related code, shaves of 25% |
-| `COMPACT_DISABLE_X25519_DERIVE` | Disable custom derive secret feature, 
-    extra useful combined with `COMPACT_DISABLE_ED25519`, in itself only saves 3%, 
-    combined with disabling Ed25519: 45%|
+| `COMPACT_DISABLE_X25519_DERIVE` | Disable custom derive secret feature, extra useful combined with `COMPACT_DISABLE_ED25519`, in itself only saves 3%, combined with disabling Ed25519: 45%|
