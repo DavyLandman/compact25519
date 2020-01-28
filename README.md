@@ -3,14 +3,14 @@
 This library is a compact and portable (c99) implementation of two popular
 operations on the Curve25519: 
 
-    - X25519: Diffie-Hellman Key Exchange 
-    - Ed25519: EdDSA signature system 
+- X25519: Diffie-Hellman Key Exchange 
+- Ed25519: EdDSA signature system 
 
 There are quite some advantages over older RSA based algorithms:
 
-    - compact key size (32 bytes for X25519 and 64bytes for Ed25519)
-    - Less opportunities to introduce side-channels
-    - Faster than other popular alternatives at the same 128bit security level
+- compact key size (32 bytes for X25519 and 64bytes for Ed25519)
+- Less opportunities to introduce side-channels
+- Faster than other popular alternatives at the same 128bit security level
 
 compact25519 targets smaller embedded devices, binary size is modest and all
 operations are on a byte level, no assumption of fast int32/int64 operations.
@@ -18,9 +18,9 @@ operations are on a byte level, no assumption of fast int32/int64 operations.
 Since there is no single C package management system, compact25519 is released as
 a single pair of c & h file. Deployment options:
 
-    - Download [release from Github](https://github.com/DavyLandman/compact25519/releases) 
-        and copy into your project directory
-    - Use PlatformIO and take a dependency on compact25519
+- Download [release from Github](https://github.com/DavyLandman/compact25519/releases) 
+  and copy into your project directory
+- TODO: Use PlatformIO and take a dependency on compact25519
 
 ## License and origins
 The implementation of the X25519 and Ed25519 is extracted from 
