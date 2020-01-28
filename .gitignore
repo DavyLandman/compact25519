@@ -54,3 +54,5 @@ dkms.conf
 /bin/
 /dist/
 /.vscode/
+/compact25519-dev-version
+dist.zip

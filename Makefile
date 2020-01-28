@@ -22,6 +22,13 @@ dist:
 	bash algamize.sh dist/ "${VERSION}"
 	cp README.md dist/
 
+PACKAGE_DIST="compact25519-${VERSION}"
+
+package-dist: dist
+	rm -rf "${PACKAGE_DIST}"
+	cp -r dist "${PACKAGE_DIST}"
+	zip -r -9 -X dist.zip "${PACKAGE_DIST}"
+
 clean:
 	rm -f bin/*
 
