@@ -74,7 +74,7 @@ echo "// compact25519 $VERSION
 #ifndef __COMPACT_25519_H
 #define __COMPACT_25519_H
 #if defined(__cplusplus)
-extern "C" {
+extern \"C\" {
 #endif
 
 // provide your own decl specificier like "-DCOMPACT_25519_DECL=ICACHE_RAM_ATTR"
