@@ -48,7 +48,7 @@ void compact_x25519_derive_encryption_key(
     uint8_t *p = key_data;
     p = append(p, shared_secret, X25519_SHARED_SIZE);
     p = append(p, public_key1, X25519_KEY_SIZE);
-    p = append(p, public_key2, X25519_KEY_SIZE);
+    append(p, public_key2, X25519_KEY_SIZE);
 
     struct sha512_state hasher;
     sha512_init(&hasher);
