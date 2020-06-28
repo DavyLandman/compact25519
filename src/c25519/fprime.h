@@ -35,8 +35,8 @@ void fprime_load(uint8_t *x, uint32_t c);
 #endif
 
 /* Load a large constant */
-void fprime_from_bytes(uint8_t *x,
-		       const uint8_t *in, size_t len,
+void fprime_from_bytes(uint8_t *n,
+		       const uint8_t *x, size_t len,
 		       const uint8_t *modulus);
 
 /* Copy an element */
