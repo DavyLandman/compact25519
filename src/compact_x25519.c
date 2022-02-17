@@ -21,7 +21,14 @@ void compact_x25519_shared(
     const uint8_t my_private_key[X25519_KEY_SIZE], 
     const uint8_t their_public_key[X25519_KEY_SIZE]
 ) {
-    c25519_smult(shared_secret, their_public_key, my_private_key);
+    // Ensure that supplied private key is clamped (fix issue #1).
+    // Calling `c25519_prepare` multiple times for the same private key
+    // is OK because it won't modify already clamped key.
+    uint8_t clamped_private_key[X25519_KEY_SIZE];
+    memcpy(clamped_private_key, my_private_key, X25519_KEY_SIZE);
+    c25519_prepare(clamped_private_key);
+    c25519_smult(shared_secret, their_public_key, clamped_private_key);
+    compact_wipe(clamped_private_key, X25519_KEY_SIZE);
 }
 
 #ifndef COMPACT_DISABLE_X25519_DERIVE
