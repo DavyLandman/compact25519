@@ -1,0 +1,16 @@
+{
+    "name": "compact25519",
+    "version": "1.1.0",
+    "repository": { "type": "git", "url": "https://github.com/DavyLandman/compact25519"},
+    "authors": [
+        { "name": "Daniel Beer", "email": "dlbeer@gmail.com" },
+        { "name": "Davy Landman", "email": "davy.landman@gmail.com" }
+    ],
+    "license": "CC0-1.0",
+    "frameworks": "*",
+    "platforms": "*",
+    "build": {
+        "srcDir": "src",
+        "includeDir": "src"
+    }
+}

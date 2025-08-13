@@ -26,6 +26,10 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define X25519_KEY_SIZE (32)
 #define X25519_SHARED_SIZE (32)
 
@@ -96,6 +100,11 @@ void compact_x25519_derive_encryption_key(
     const uint8_t public_key1[X25519_KEY_SIZE], 
     const uint8_t public_key2[X25519_KEY_SIZE]
 );
+
+#ifdef __cplusplus
+}
+#endif
+
 #endif
 #endif
 #endif

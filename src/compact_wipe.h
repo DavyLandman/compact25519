@@ -2,6 +2,11 @@
 #define __COMPACT_WIPE_H
 #include <stdint.h>
 #include <stddef.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /*
     Try to wipe contents of a buffer, as best as we can.
     (memset can be ignored by the compiler)
@@ -11,4 +16,9 @@
     returns the data pointer, makes for easier chaining
 */
 void *compact_wipe(void *data, size_t length);
+
+#ifdef __cplusplus
+}
+#endif
+
 #endif

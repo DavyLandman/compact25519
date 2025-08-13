@@ -60,9 +60,14 @@ function make_everything_static() {
 }
 
 function add_decl_spec() {
+    # Add COMPACT_25519_DECL prefix to:
+    # - static functions
+    # - other lines that don't start with space, #, {, }, / or s
+    # - but not to line extern "C"
     sed \
         -e 's/^static /static COMPACT_25519_DECL /' \
-        -e 's/^\([^\ \t#{}()\/*s]\)/COMPACT_25519_DECL \1/' # non static stuff like global header
+        -e 's/^\([^\ \t#{}()\/*s]\)/COMPACT_25519_DECL \1/' \
+        -e 's/COMPACT_25519_DECL\s*\(extern "C" {\)/\1/'
 }
 
 echo "// compact25519 $VERSION
@@ -73,9 +78,6 @@ echo "// compact25519 $VERSION
 
 #ifndef __COMPACT_25519_H
 #define __COMPACT_25519_H
-#if defined(__cplusplus)
-extern \"C\" {
-#endif
 
 // provide your own decl specificier like "-DCOMPACT_25519_DECL=ICACHE_RAM_ATTR"
 #ifndef COMPACT_25519_DECL
@@ -87,10 +89,7 @@ for h in "${COMPACT_FILES[@]}"; do
     cat "$SRC_DIR/$h.h" | remove_header_guard 
 done | merge_includes | remove_double_blank_lines | add_decl_spec >> "$DST_HEADER" 
 
-echo "#if defined(__cplusplus)
-}
-#endif
-#endif" >> "$DST_HEADER"
+echo "#endif" >> "$DST_HEADER"
 
 
 echo "// compact25519 $VERSION

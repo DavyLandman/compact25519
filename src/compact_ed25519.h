@@ -25,6 +25,10 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define ED25519_SEED_SIZE (32)
 #define ED25519_PUBLIC_KEY_SIZE (32)
 #define ED25519_PRIVATE_KEY_SIZE (64)
@@ -105,6 +109,11 @@ bool compact_ed25519_verify(
     const void *message, 
     size_t msg_length
 );
+
+#ifdef __cplusplus
+}
+#endif
+
 #endif
 
 #endif

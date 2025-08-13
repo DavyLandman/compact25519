@@ -20,7 +20,13 @@ a single pair of c & h file. Deployment options:
 
 - Download [release from Github](https://github.com/DavyLandman/compact25519/releases) 
   and copy into your project directory
-- TODO: Use PlatformIO and take a dependency on compact25519
+
+## Usage with PlatformIO
+
+To use this library in a platformio project, add this to `platformio.ini`:
+
+    lib_deps =
+        compact25519=https://github.com/DavyLandman/compact25519
 
 ## License and origins
 The implementation of the X25519 and Ed25519 is extracted from 
